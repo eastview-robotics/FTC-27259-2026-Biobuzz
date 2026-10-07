@@ -5,7 +5,6 @@ public class Drive {
 
         // inverting y stick
         forward *= -1;
-        double rotateMultiplier = 0.5;
 
         // Calculate individual wheel speeds
         double backLeftSpeed;
@@ -13,23 +12,24 @@ public class Drive {
         double backRightSpeed;
         double frontRightSpeed;
 
-        if (rotateCW < 0.2) {
+        if (rotateCW < 0.2 && rotateCW > -0.2) {
             backLeftSpeed   = forward - right + rotateCW;
             frontLeftSpeed  = forward + right + rotateCW;
             backRightSpeed  = forward - right - rotateCW;
             frontRightSpeed = forward + right - rotateCW;
-        } else if (rotateCW < 0.7){
-            backLeftSpeed   = (forward * 0.75) - (right * 0.75) + rotateCW;
-            frontLeftSpeed  = (forward * 0.75) + (right * 0.75) + rotateCW;
-            backRightSpeed  = (forward * 0.75) - (right * 0.75) - rotateCW;
-            frontRightSpeed = (forward * 0.75) + (right * 0.75) - rotateCW;
+        } else if (rotateCW < 0.7 || rotateCW > -0.7){
+            double multiplier = 0.9;
+            backLeftSpeed   = (forward * multiplier) - (right * multiplier) + rotateCW;
+            frontLeftSpeed  = (forward * multiplier) + (right * multiplier) + rotateCW;
+            backRightSpeed  = (forward * multiplier) - (right * multiplier) - rotateCW;
+            frontRightSpeed = (forward * multiplier) + (right * multiplier) - rotateCW;
         } else {
-            backLeftSpeed   = (forward * 0.6) - (right * 0.6) + rotateCW;
-            frontLeftSpeed  = (forward * 0.6) + (right * 0.6) + rotateCW;
-            backRightSpeed  = (forward * 0.6) - (right * 0.6) - rotateCW;
-            frontRightSpeed = (forward * 0.6) + (right * 0.6) - rotateCW;
+            double multiplier = 0.75;
+            backLeftSpeed   = (forward * multiplier) - (right * multiplier) + rotateCW;
+            frontLeftSpeed  = (forward * multiplier) + (right * multiplier) + rotateCW;
+            backRightSpeed  = (forward * multiplier) - (right * multiplier) - rotateCW;
+            frontRightSpeed = (forward * multiplier) + (right * multiplier) - rotateCW;
         }
-
 
 
         // Normalize speeds if any value exceeds 1.0 to maintain directional integrity

@@ -10,15 +10,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOp_LooseBoltsV3 extends OpMode {
 
     boolean dropIntake = false;
+    double sensitivity = 1;
+    boolean shootInProgress = false;
+    double pushShooterPosServoPosition = 0;
+    int delay = 0;
 
     // button toggle
     ToggleButton dropIntakeToggle = new ToggleButton(false);
 
-
-
     // intake
     Motor intakeMotor = new Motor();
     PositionalServo dropIntakePositionalServo = new PositionalServo();
+    PositionalServo pushShooterPositionalServo = new PositionalServo();
 
     // drive motors
     Drive drive = new Drive();
@@ -34,8 +37,15 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
     public void init() {
         // intake
         intakeMotor.init(hardwareMap, "intake_motor");
+
+
+
         dropIntakePositionalServo.init(hardwareMap, "intake_drop_servo");
         dropIntakePositionalServo.setServoPosition(0);
+
+
+        pushShooterPositionalServo.init(hardwareMap, "push_into_shooter_servo");
+        pushShooterPositionalServo.setServoPosition(0);
 
         // drive
         backLeftMotor.init(hardwareMap, "back_left");
@@ -58,6 +68,16 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
     // runs approximately 50 - 150 times per sec
     public void loop() {
 
+        //====================================
+
+        if (gamepad1.left_trigger > 0 && sensitivity >= 0.1) {
+            sensitivity -= gamepad1.left_trigger * 0.001;
+        } else if (gamepad1.right_trigger > 0 && sensitivity < 1) {
+            sensitivity += gamepad1.right_trigger * 0.001;
+        }
+
+        //====================================
+
         dropIntake = dropIntakeToggle.toggle(gamepad2.x);
 
         if (dropIntake) {
@@ -66,9 +86,18 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
             dropIntakePositionalServo.setServoPosition(0);
         }
 
+        //====================================
+
+        pushShooterPositionalServo.setServoPosition(gamepad2.right_trigger * 0.2);
+
+        //====================================
+
         intakeMotor.setMotorSpeed(gamepad2.right_stick_x);
 
-        double[] motorPowerBlFlBrFr = drive.getMotorPower(gamepad1.left_stick_y, gamepad1.left_stick_x, gamepad1.right_stick_x);
+        double[] motorPowerBlFlBrFr = drive.getMotorPower(
+                gamepad1.left_stick_y * sensitivity,
+                gamepad1.left_stick_x * sensitivity,
+                gamepad1.right_stick_x * sensitivity);
 
         // Apply the speeds to motor controllers
         backLeftMotor.setMotorSpeed(motorPowerBlFlBrFr[0]);
@@ -79,6 +108,7 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
 
         // telemetry
         telemetry.addData("Intake Drop Status", dropIntakeToggle.currentStatus());
+        telemetry.addData("Sensitivity", sensitivity);
         //telemetry.addData("Left Stick x", gamepad2.left_stick_x);
         //telemetry.addData("Left Stick y", gamepad2.left_stick_y);
         //telemetry.addData("Right Stick x", gamepad2.right_stick_x);
