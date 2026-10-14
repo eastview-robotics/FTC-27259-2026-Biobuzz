@@ -88,7 +88,7 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
 
         //====================================
 
-        pushShooterPositionalServo.setServoPosition(gamepad2.right_trigger * 0.2);
+        pushShooterPositionalServo.setServoPosition(gamepad2.right_trigger * 0.3);
 
         //====================================
 
