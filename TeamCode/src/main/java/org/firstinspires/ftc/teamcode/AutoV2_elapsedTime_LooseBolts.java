@@ -136,10 +136,10 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
                 rotateCW);
 
         // Apply the speeds to motor controllers
-        backLeftMotor.setMotorSpeed(motorPowerBlFlBrFr[0]);
-        frontLeftMotor.setMotorSpeed(motorPowerBlFlBrFr[1]);
-        backRightMotor.setMotorSpeed(motorPowerBlFlBrFr[2]);
-        frontRightMotor.setMotorSpeed(motorPowerBlFlBrFr[3]);
+        backLeftMotor.setMotorPower(motorPowerBlFlBrFr[0]);
+        frontLeftMotor.setMotorPower(motorPowerBlFlBrFr[1]);
+        backRightMotor.setMotorPower(motorPowerBlFlBrFr[2]);
+        frontRightMotor.setMotorPower(motorPowerBlFlBrFr[3]);
 
         // Telemetry outputs
         telemetry.addData("Current State", currentState);

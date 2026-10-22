@@ -7,42 +7,42 @@ public class Drive {
         forward *= -1;
 
         // Calculate individual wheel speeds
-        double backLeftSpeed;
-        double frontLeftSpeed;
-        double backRightSpeed;
-        double frontRightSpeed;
+        double backLeftPower;
+        double frontLeftPower;
+        double backRightPower;
+        double frontRightPower;
 
         if (rotateCW < 0.2 && rotateCW > -0.2) {
-            backLeftSpeed   = forward - right + rotateCW;
-            frontLeftSpeed  = forward + right + rotateCW;
-            backRightSpeed  = forward - right - rotateCW;
-            frontRightSpeed = forward + right - rotateCW;
+            backLeftPower = forward - right + rotateCW;
+            frontLeftPower = forward + right + rotateCW;
+            backRightPower = forward - right - rotateCW;
+            frontRightPower = forward + right - rotateCW;
         } else if (rotateCW < 0.7 || rotateCW > -0.7){
             double multiplier = 0.9;
-            backLeftSpeed   = (forward * multiplier) - (right * multiplier) + rotateCW;
-            frontLeftSpeed  = (forward * multiplier) + (right * multiplier) + rotateCW;
-            backRightSpeed  = (forward * multiplier) - (right * multiplier) - rotateCW;
-            frontRightSpeed = (forward * multiplier) + (right * multiplier) - rotateCW;
+            backLeftPower = (forward * multiplier) - (right * multiplier) + rotateCW;
+            frontLeftPower = (forward * multiplier) + (right * multiplier) + rotateCW;
+            backRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
+            frontRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
         } else {
             double multiplier = 0.75;
-            backLeftSpeed   = (forward * multiplier) - (right * multiplier) + rotateCW;
-            frontLeftSpeed  = (forward * multiplier) + (right * multiplier) + rotateCW;
-            backRightSpeed  = (forward * multiplier) - (right * multiplier) - rotateCW;
-            frontRightSpeed = (forward * multiplier) + (right * multiplier) - rotateCW;
+            backLeftPower = (forward * multiplier) - (right * multiplier) + rotateCW;
+            frontLeftPower = (forward * multiplier) + (right * multiplier) + rotateCW;
+            backRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
+            frontRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
         }
 
 
         // Normalize speeds if any value exceeds 1.0 to maintain directional integrity
         double max = Math.max(1.0, Math.max(
-                Math.max(Math.abs(frontLeftSpeed), Math.abs(frontRightSpeed)),
-                Math.max(Math.abs(backLeftSpeed), Math.abs(backRightSpeed))
+                Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
+                Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))
         ));
-        backLeftSpeed   /= max;
-        frontLeftSpeed  /= max;
-        backRightSpeed  /= max;
-        frontRightSpeed /= max;
+        backLeftPower /= max;
+        frontLeftPower /= max;
+        backRightPower /= max;
+        frontRightPower /= max;
 
 
-        return new double[] {backLeftSpeed, frontLeftSpeed, backRightSpeed, frontRightSpeed};
+        return new double[] {backLeftPower, frontLeftPower, backRightPower, frontRightPower};
     }
 }

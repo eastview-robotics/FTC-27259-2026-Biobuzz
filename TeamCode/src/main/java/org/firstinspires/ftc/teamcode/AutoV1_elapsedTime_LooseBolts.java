@@ -47,14 +47,14 @@ public class AutoV1_elapsedTime_LooseBolts extends OpMode {
         switch (currentState) {
             case START:
                 motorTimer.reset();      // Start the clock
-                intakeMotor.setMotorSpeed(0.5);     // Turn motor on
+                intakeMotor.setMotorPower(0.5);     // Turn motor on
                 currentState = MotorState.SPINNING;
                 break;
 
             case SPINNING:
                 // Check if 1.2 seconds have passed (approx. time for 1 rotation)
                 if (motorTimer.seconds() >= 1.2) {
-                    intakeMotor.setMotorSpeed(0);   // Stop the motor
+                    intakeMotor.setMotorPower(0);   // Stop the motor
                     currentState = MotorState.DONE;
                 }
                 break;

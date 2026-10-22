@@ -39,7 +39,7 @@ public class TeleOpV1 extends OpMode {
 
 
 
-        intakeMotor.setMotorSpeed(gamepad2.right_stick_y);
+        intakeMotor.setMotorPower(gamepad2.right_stick_y);
 
         // drive
         //======================================================
@@ -66,10 +66,10 @@ public class TeleOpV1 extends OpMode {
         backRightSpeed  /= max;
 
         // Apply the speeds to motor controllers (e.g., Victor, Talon, Spark)
-        frontLeftMotor.setMotorSpeed(frontLeftSpeed);
-        frontRightMotor.setMotorSpeed(frontRightSpeed);
-        backLeftMotor.setMotorSpeed(backLeftSpeed);
-        backRightMotor.setMotorSpeed(backRightSpeed);
+        frontLeftMotor.setMotorPower(frontLeftSpeed);
+        frontRightMotor.setMotorPower(frontRightSpeed);
+        backLeftMotor.setMotorPower(backLeftSpeed);
+        backRightMotor.setMotorPower(backRightSpeed);
         //======================================================
 
 

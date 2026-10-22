@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class RotationalServo {
 
     private CRServo servo;
     public void init(HardwareMap hwMap, String servoName) {
-        //true is positional
-        servo = hwMap.get(CRServo.class, "intake_drop_servo");
-
+        servo = hwMap.get(CRServo.class, servoName);
     }
 
     public void setServoRotationSpeed(double speed) {

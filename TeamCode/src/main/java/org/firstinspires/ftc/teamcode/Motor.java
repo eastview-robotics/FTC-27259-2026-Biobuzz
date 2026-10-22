@@ -23,7 +23,7 @@ public class Motor {
 
     }
 
-    public void setMotorSpeed(double motorSpeed) {
+    public void setMotorPower(double motorSpeed) {
         motor.setPower(motorSpeed);
     }
 }

@@ -10,18 +10,23 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class TeleOp_LooseBoltsV3 extends OpMode {
 
     boolean dropIntake = false;
+    boolean shooterMotorOn = false;
     double sensitivity = 1;
-    boolean shootInProgress = false;
-    double pushShooterPosServoPosition = 0;
+
     int delay = 0;
 
     // button toggle
     ToggleButton dropIntakeToggle = new ToggleButton(false);
+    ToggleButton shooterMotorToggle = new ToggleButton(false);
 
     // intake
     Motor intakeMotor = new Motor();
     PositionalServo dropIntakePositionalServo = new PositionalServo();
-    PositionalServo pushShooterPositionalServo = new PositionalServo();
+    RotationalServo pushShooterRotationalServo = new RotationalServo();
+
+    // shooter
+
+    Motor shooterMotor = new Motor();
 
     // drive motors
     Drive drive = new Drive();
@@ -38,14 +43,14 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
         // intake
         intakeMotor.init(hardwareMap, "intake_motor");
 
-
-
         dropIntakePositionalServo.init(hardwareMap, "intake_drop_servo");
         dropIntakePositionalServo.setServoPosition(0);
 
+        // shooter
+        pushShooterRotationalServo.init(hardwareMap, "push_into_shooter_servo");
+        shooterMotor.init(hardwareMap, "shooter_motor");
+        backRightMotor.setDirection("R");
 
-        pushShooterPositionalServo.init(hardwareMap, "push_into_shooter_servo");
-        pushShooterPositionalServo.setServoPosition(0);
 
         // drive
         backLeftMotor.init(hardwareMap, "back_left");
@@ -87,12 +92,23 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
         }
 
         //====================================
-
-        pushShooterPositionalServo.setServoPosition(gamepad2.right_trigger * 0.3);
-
+        if (gamepad2.right_trigger > 0.7){
+            pushShooterRotationalServo.setServoRotationSpeed(gamepad2.right_trigger);
+        } else {
+            pushShooterRotationalServo.setServoRotationSpeed(0);
+        }
         //====================================
 
-        intakeMotor.setMotorSpeed(gamepad2.right_stick_x);
+        shooterMotorOn = shooterMotorToggle.toggle(gamepad2.right_bumper);
+
+        if (shooterMotorOn){
+            pushShooterRotationalServo.setServoRotationSpeed(1);
+        } else {
+            pushShooterRotationalServo.setServoRotationSpeed(0);
+        }
+        //====================================
+
+        intakeMotor.setMotorPower(gamepad2.right_stick_x);
 
         double[] motorPowerBlFlBrFr = drive.getMotorPower(
                 gamepad1.left_stick_y * sensitivity,
@@ -100,10 +116,10 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
                 gamepad1.right_stick_x * sensitivity);
 
         // Apply the speeds to motor controllers
-        backLeftMotor.setMotorSpeed(motorPowerBlFlBrFr[0]);
-        frontLeftMotor.setMotorSpeed(motorPowerBlFlBrFr[1]);
-        backRightMotor.setMotorSpeed(motorPowerBlFlBrFr[2]);
-        frontRightMotor.setMotorSpeed(motorPowerBlFlBrFr[3]);
+        backLeftMotor.setMotorPower(motorPowerBlFlBrFr[0]);
+        frontLeftMotor.setMotorPower(motorPowerBlFlBrFr[1]);
+        backRightMotor.setMotorPower(motorPowerBlFlBrFr[2]);
+        frontRightMotor.setMotorPower(motorPowerBlFlBrFr[3]);
 
 
         // telemetry
