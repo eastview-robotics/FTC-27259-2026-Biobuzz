@@ -13,22 +13,22 @@ public class Drive {
         double frontRightPower;
 
         if (rotateCW < 0.2 && rotateCW > -0.2) {
-            backLeftPower = forward - right + rotateCW;
-            frontLeftPower = forward + right + rotateCW;
-            backRightPower = forward - right - rotateCW;
-            frontRightPower = forward + right - rotateCW;
+            backLeftPower   = forward - right + rotateCW;
+            frontLeftPower  = forward + right + rotateCW;
+            backRightPower  = forward + right - rotateCW;
+            frontRightPower = forward - right - rotateCW;
         } else if (rotateCW < 0.7 || rotateCW > -0.7){
             double multiplier = 0.9;
             backLeftPower = (forward * multiplier) - (right * multiplier) + rotateCW;
             frontLeftPower = (forward * multiplier) + (right * multiplier) + rotateCW;
-            backRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
-            frontRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
+            backRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
+            frontRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
         } else {
             double multiplier = 0.75;
             backLeftPower = (forward * multiplier) - (right * multiplier) + rotateCW;
             frontLeftPower = (forward * multiplier) + (right * multiplier) + rotateCW;
-            backRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
-            frontRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
+            backRightPower = (forward * multiplier) + (right * multiplier) - rotateCW;
+            frontRightPower = (forward * multiplier) - (right * multiplier) - rotateCW;
         }
 
 

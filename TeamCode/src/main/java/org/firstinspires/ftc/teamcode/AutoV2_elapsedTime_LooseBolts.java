@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name = "AutoV2")
 public class AutoV2_elapsedTime_LooseBolts extends OpMode {
 
-    enum MotorState { STOPPED, FORWARD, BACK, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE, DONE }
+    enum MotorState {STOPPED, DROP, FORWARD, BACK, LEFT, RIGHT, CLOCKWISE, COUNTERCLOCKWISE, INITSHOOT, SHOOT, DONE }
 
     double duration = 1;
 
-    double speed = 0.5;
+    double speed = 0.4;
 
     double forward;
     double right;
@@ -19,8 +19,16 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
     MotorState currentState = MotorState.STOPPED;
     ElapsedTime ActionDuration = new ElapsedTime();
 
-    // motors
+    //Intake
     Motor intakeMotor = new Motor();
+    PositionalServo dropIntakePositionalServo = new PositionalServo();
+
+
+    //Shooter
+    MotorEx shooterMotor = new MotorEx(24);
+    RotationalServo spindexerServo = new RotationalServo();
+    PositionalServo gatePositionalServo = new PositionalServo();
+
     // drive motors
     Drive drive = new Drive();
     Motor backLeftMotor = new Motor();
@@ -29,7 +37,29 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
     Motor frontRightMotor = new Motor();
 
     @Override
-    public void init() {
+    public void init(){
+
+
+        // intake
+        intakeMotor.init(hardwareMap, "intake_motor");
+
+        dropIntakePositionalServo.init(hardwareMap, "intake_drop_servo");
+        dropIntakePositionalServo.setServoPosition(0);
+
+        // shooter
+        spindexerServo.init(hardwareMap, "spindexer_servo");
+
+        shooterMotor.init(hardwareMap, "shooter_motor");
+        shooterMotor.setDirection("R");
+
+        gatePositionalServo.init(hardwareMap, "gate_servo");
+        gatePositionalServo.setServoPosition(0);
+
+
+        // drive
+
+
+
         // drive hardware mapping
         backLeftMotor.init(hardwareMap, "back_left");
         frontLeftMotor.init(hardwareMap, "front_left");
@@ -53,7 +83,19 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
 
                 // Reset here prepares a completely fresh 0.0 for the FORWARD state
                 ActionDuration.reset();
-                currentState = MotorState.FORWARD;
+                currentState = MotorState.DROP;
+                break;
+
+            case DROP:
+                forward = 0;
+                right = 0;
+                rotateCW = 0;
+                dropIntakePositionalServo.setServoPosition(0.3);
+                intakeMotor.setMotorPower(1);
+                if (ActionDuration.seconds() >= duration) {
+                    ActionDuration.reset(); // Reset for CLOCKWISE
+                    currentState = MotorState.FORWARD;
+                }
                 break;
 
             case FORWARD:
@@ -85,7 +127,7 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
 
                 if (ActionDuration.seconds() >= duration) {
                     ActionDuration.reset(); // Reset for LEFT
-                    currentState = MotorState.LEFT;
+                    currentState = MotorState.BACK;
                 }
                 break;
 
@@ -116,13 +158,38 @@ public class AutoV2_elapsedTime_LooseBolts extends OpMode {
                 right = 0;
                 rotateCW = 0;
 
-                if (ActionDuration.seconds() >= duration) {
+                if (ActionDuration.seconds() >= duration-0.2) {
+                    // DONE doesn't use a timer, no reset required
+                    currentState = MotorState.INITSHOOT;
+                }
+                break;
+
+            case INITSHOOT:
+                forward = 0;
+                right = 0;
+                rotateCW = 0;
+                shooterMotor.setMotorRPM(3800);
+                gatePositionalServo.setServoPosition(0.75);
+                if (ActionDuration.seconds() >= duration*5) {
+                    currentState = MotorState.SHOOT;
+                }
+                break;
+
+            case SHOOT:
+                forward = 0;
+                right = 0;
+                rotateCW = 0;
+                spindexerServo.setServoRotationSpeed(-0.2);
+                if (ActionDuration.seconds() >= duration * 20) {
                     // DONE doesn't use a timer, no reset required
                     currentState = MotorState.DONE;
                 }
                 break;
 
             case DONE:
+                shooterMotor.setMotorRPM(0);
+                spindexerServo.setServoRotationSpeed(0);
+                gatePositionalServo.setServoPosition(0);
                 forward = 0;
                 right = 0;
                 rotateCW = 0;

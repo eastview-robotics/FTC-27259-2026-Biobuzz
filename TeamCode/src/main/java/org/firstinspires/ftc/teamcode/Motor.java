@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -23,7 +24,7 @@ public class Motor {
 
     }
 
-    public void setMotorPower(double motorSpeed) {
-        motor.setPower(motorSpeed);
+    public void setMotorPower(double motorPower) {
+        motor.setPower(motorPower);
     }
 }
