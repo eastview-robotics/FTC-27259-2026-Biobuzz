@@ -329,24 +329,24 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
         double autoRotationCW = 0;
         if (autoAdjustOn) {
             if (scoring) {
-                if (returnCameraData("range", alliance + "_SCORING") > 36) {
+                if (returnCameraData("range", alliance + " SCORING") > 36) {
                     autoForward = 0.25;
-                } else if (returnCameraData("range", alliance + "_SCORING") < 30) {
+                } else if (returnCameraData("range", alliance + " SCORING") < 30) {
                     autoForward = -0.25;
                 }
-                if (returnCameraData("bearing", alliance + "_SCORING") > 5) {
+                if (returnCameraData("bearing", alliance + " SCORING") > 5) {
                     autoRotationCW = 0.25;
-                } else if (returnCameraData("bearing", alliance + "_SCORING") < -5) {
+                } else if (returnCameraData("bearing", alliance + " SCORING") < -5) {
                     autoRotationCW = -0.25;
                 } else {
-                    if (returnCameraData("range", alliance + "_AUDIENCE") > 36) {
+                    if (returnCameraData("range", alliance + " AUDIENCE") > 36) {
                         autoForward = 0.25;
-                    } else if (returnCameraData("range", alliance + "_AUDIENCE") < 30) {
+                    } else if (returnCameraData("range", alliance + " AUDIENCE") < 30) {
                         autoForward = -0.25;
                     }
-                    if (returnCameraData("bearing", alliance + "_AUDIENCE") > 5) {
+                    if (returnCameraData("bearing", alliance + " AUDIENCE") > 5) {
                         autoRotationCW = 0.25;
-                    } else if (returnCameraData("bearing", alliance + "_AUDIENCE") < -5) {
+                    } else if (returnCameraData("bearing", alliance + " AUDIENCE") < -5) {
                         autoRotationCW = -0.25;
                     }
                 }
