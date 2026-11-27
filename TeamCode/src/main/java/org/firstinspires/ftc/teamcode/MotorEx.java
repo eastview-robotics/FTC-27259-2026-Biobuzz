@@ -20,10 +20,10 @@ public class MotorEx {
     public void init(HardwareMap hwMap, String motorName) {
         motor = hwMap.get(DcMotorEx.class, motorName);
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double p = 10.0; // Increase this to ramp up faster
+        double p = 25.0; // Increase this to ramp up faster
         double i = 0.0;  // Keep at 0 initially, or small value (e.g., 0.1 * P) if it falls just short
-        double d = 0.0;  // Add a tiny amount only if the speed oscillates/overshoots
-        double f = 15.0; // Baseline power estimate (32767 / max motor ticks per second)
+        double d = 1.5;  // Add a tiny amount only if the speed oscillates/overshoots
+        double f = 11.7; // Baseline power estimate (32767 / max motor ticks per second)
 
         motor.setVelocityPIDFCoefficients(p, i, d, f);
     }

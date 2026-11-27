@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.abs;
+import static java.lang.Math.cos;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -246,7 +248,7 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
         shooterMotorOn = toggleShooterMotor.toggle(toggleShooterMotorBind);
         // **POLLEN V. NECTAR SHOOTER MOTOR SPEED**
         if (setPollenShooterMotorSpeedBind){
-            targetRPM = 3300;
+            targetRPM = 2700;
         }
 
         // **VARIABLE SHOOTER MOTOR SPEED**
@@ -317,40 +319,70 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
         // **TOGGLE AUTO_ADJUST**
         autoAdjustOn = toggleAutoAdjust.toggle(autoAdjustOnBind);
 
-        if (gamepad1.leftBumperWasPressed()){
-            scoring = true;
-        }
-        if (gamepad1.rightBumperWasPressed()){
-            scoring = false;
-        }
 
         double autoForward = 0;
         double autoRight = 0;
         double autoRotationCW = 0;
         if (autoAdjustOn) {
-            if (scoring) {
-                if (returnCameraData("range", alliance + " SCORING") > 36) {
-                    autoForward = 0.25;
-                } else if (returnCameraData("range", alliance + " SCORING") < 30) {
-                    autoForward = -0.25;
-                }
-                if (returnCameraData("bearing", alliance + " SCORING") > 5) {
-                    autoRotationCW = 0.25;
-                } else if (returnCameraData("bearing", alliance + " SCORING") < -5) {
-                    autoRotationCW = -0.25;
-                } else {
-                    if (returnCameraData("range", alliance + " AUDIENCE") > 36) {
-                        autoForward = 0.25;
-                    } else if (returnCameraData("range", alliance + " AUDIENCE") < 30) {
-                        autoForward = -0.25;
-                    }
-                    if (returnCameraData("bearing", alliance + " AUDIENCE") > 5) {
-                        autoRotationCW = 0.25;
-                    } else if (returnCameraData("bearing", alliance + " AUDIENCE") < -5) {
-                        autoRotationCW = -0.25;
+            String scoreAudience;
+            if (returnCameraData("elevation", alliance + " SCORING") > returnCameraData("elevation", alliance + " AUDIENCE")) {
+                scoreAudience = " SCORING";
+            } else {
+                scoreAudience = " AUDIENCE";
+            }
+            /*
+            if (returnCameraData("range", alliance + scoreAudience) == 0) {
+                autoRotationCW = 0.2;
+            }
+
+             */
+
+            List<AprilTagDetection> currentDetections = aprilTag.getDetections();
+            for (AprilTagDetection detection : currentDetections) {
+                if (detection instanceof AprilTagSingleDetection) {
+                    AprilTagSingleDetection singleDet = (AprilTagSingleDetection) detection;
+                    if (singleDet.metadata != null) {
+                        autoRotationCW = 0.2;
                     }
                 }
             }
+
+            /*
+            if (returnCameraData("range", alliance + scoreAudience) > 53) {
+                autoForward = -0.2;
+            } else if (returnCameraData("range", alliance + scoreAudience) < 47) {
+                autoForward = 0.2;
+            }
+            if (returnCameraData("bearing", alliance + scoreAudience) > 4) {
+                autoRotationCW = -0.1;
+            } else if (returnCameraData("bearing", alliance + scoreAudience) < -4) {
+                autoRotationCW = 0.1;
+            }
+
+             */
+
+            int targetRange = 50; //inches
+            int targetBearing = 0; //degrees
+            double rangeDist = returnCameraData("range", alliance + scoreAudience) - targetRange;
+            double bearingDist = returnCameraData("bearing", alliance + scoreAudience) - targetBearing;
+
+            if (rangeDist >= 0) {
+                autoForward = (-0.5 * cos(4 * rangeDist)) + 0.5;
+            } else {
+                autoForward = -((-0.5 * cos(4 * rangeDist)) + 0.5);
+            }
+            if (bearingDist >= 0) {
+                autoForward = (-0.3 * cos(1.2 * bearingDist)) - (0.5 * cos (0.5 * bearingDist)) + 0.8;
+            } else {
+                autoForward = -((-0.3 * cos(1.2 * bearingDist)) - (0.5 * cos (0.5 * bearingDist)) + 0.8);
+            }
+
+
+            autoRotationCW = 0.1;
+
+
+
+
 
             motorPowerBlFlBrFr = drive.getMotorPower(
                     autoForward,
@@ -374,10 +406,10 @@ public class TeleOp_LooseBoltsV3 extends OpMode {
 
 
         // telemetry
-        telemetry.addData("Sensitivity", sensitivity);
-        telemetry.addData("targetRPM", targetRPM);
-        telemetry.addData("Gate Open", gateOpen);
-        telemetry.addData("Intake In", intakeIn);
+        //telemetry.addData("Sensitivity", sensitivity);
+        //telemetry.addData("targetRPM", targetRPM);
+        //telemetry.addData("Gate Open", gateOpen);
+        //telemetry.addData("Intake In", intakeIn);
         //telemetry.addData("Pollen Speed On", setPollenShooterMotorSpeedBind);
         //telemetry.addData("Nectar Speed On", setNectarShooterMotorSpeedBind);
         //telemetry.addData("Left Stick x", gamepad2.left_stick_x);
